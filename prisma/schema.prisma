@@ -15,7 +15,7 @@ datasource db {
 
 model Referral {
   id        Int      @id @default(autoincrement())
-  referrer  String
+  referrer  String 
   referee   String
   email     String
   createdAt DateTime @default(now())

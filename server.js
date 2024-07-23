@@ -10,10 +10,12 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Endpoint to handle referral form submission
+console.log("My name");
 app.post('/api/referrals', async (req, res) => {
   const { referrer, referee, email } = req.body;
-
+  console.log('Incoming request:', req.body); 
   if (!referrer || !referee || !email) {
+    console.log('Missing fields');
     return res.status(400).json({ error: 'Missing fields' });
   }
 
@@ -29,20 +31,22 @@ app.post('/api/referrals', async (req, res) => {
     res.status(201).json(referral);
 
     // Send referral email
+
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'Your email',  
-        pass: 'your Password',
-        //ntft zune kbma irwe
+         user: EMAIL_USER,
+        pass: EMAIL_PASSWORD,
+          
       },
     });
 
     const mailOptions = {
-      from: 'Your email',  
+      
+      from: EMAIL_USER,  
       to: email,
-      subject: 'You have been assigned Prime Role!',
-      text: `Hello ${referee},\n\n${referrer} has assigned you to Prime Role .\n\nBest Regards,\nTCS `,
+      subject: 'You have been Referral',
+      text: `Hello ${referee},\n\n${referrer} has referred you to our service .\n\nBest Regards,\nAccredian `,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -54,6 +58,7 @@ app.post('/api/referrals', async (req, res) => {
     });
 
   } catch (error) {
+    console.error('Error creating referral:', error);
     if (!res.headersSent) {
       res.status(500).json({ error: 'Error saving referral' });
     }
