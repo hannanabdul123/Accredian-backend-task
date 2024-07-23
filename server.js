@@ -18,7 +18,10 @@ app.post('/api/referrals', async (req, res) => {
     console.log('Missing fields');
     return res.status(400).json({ error: 'Missing fields' });
   }
-
+  const emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+  if (!emailPattern.test(email)) {
+    return res.status(400).json({ error: 'Invalid email format.' });
+  }
   try {
     const referral = await prisma.referral.create({
       data: {
@@ -35,15 +38,15 @@ app.post('/api/referrals', async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-         user: EMAIL_USER,
-        pass: EMAIL_PASSWORD,
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
           
       },
     });
 
     const mailOptions = {
       
-      from: EMAIL_USER,  
+      from:process.env.EMAIL_USER, 
       to: email,
       subject: 'You have been Referral',
       text: `Hello ${referee},\n\n${referrer} has referred you to our service .\n\nBest Regards,\nAccredian `,
