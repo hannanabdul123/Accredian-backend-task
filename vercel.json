@@ -5,6 +5,11 @@
     ],
     "routes": [
       { "src": "/(.*)", "dest": "server.js" }
-    ]
+    ],
+    "build": {
+      "env": {
+        "PRISMA_CLIENT_ENGINE_TYPE": "binary"
+      }
+    }
   }
   
